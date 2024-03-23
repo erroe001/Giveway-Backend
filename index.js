@@ -11,21 +11,21 @@ const App = express()
 App.use(express.json())
 App.use(express.static("Public"))
 App.use(express.urlencoded({extended:false}))
-App.listen(process.env.PORT , ()=>{
-  console.log("Connected")
-
+App.listen(process.env.PORT , async()=>{
+  try {
+    await mongoose.connect(process.env.MONGOOSE_URL)
+    console.log("Mongoose Connected")
+    console.log("Server Started")
+  } catch (error) {
+    console.log("Failed To Connect Mongoose ")
+    
+  }
 })
 App.use(cors({
   origin:"*"
 }))
 
-try {
-  await mongoose.connect(process.env.MONGOOSE_URL)
-  console.log("Mongoose Connected")
-} catch (error) {
-  console.log("Failed To Connect Mongoose ")
-  
-}
+
 
 
 const FormUser = new Schema({
