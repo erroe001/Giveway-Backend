@@ -2,14 +2,16 @@ import express from 'express'
 import mongoose, { Schema, model } from 'mongoose'
 import { ApiErrorResponse, ApiResponse, globleErrorHandler } from './Responses.js'
 import cors from 'cors'
-
-
+import dotenv from 'dotenv'
+dotenv.config({
+  path:".env"
+})
 const App = express()
 
 App.use(express.json())
 App.use(express.static("Public"))
 App.use(express.urlencoded({extended:false}))
-App.listen(3000 , ()=>{
+App.listen(process.env.PORT , ()=>{
   console.log("Connected")
 
 })
@@ -18,7 +20,7 @@ App.use(cors({
 }))
 
 try {
-  await mongoose.connect("mongodb+srv://joydeep:Joydeep122@cluster0.zy4wbxw.mongodb.net/")
+  await mongoose.connect(process.env.MONGOOSE_URL)
   console.log("Mongoose Connected")
 } catch (error) {
   console.log("Failed To Connect Mongoose ")
