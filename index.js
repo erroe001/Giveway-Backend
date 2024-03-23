@@ -74,6 +74,11 @@ const FormUser = new Schema({
 })
 
 const UserForm = model("Userform" , FormUser)
+App.get("/" , (req,res)=>{
+  new ApiResponse(200 , "Success").response(res)
+})
+
+
 
 App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
