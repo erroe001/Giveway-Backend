@@ -49,28 +49,26 @@ const FormUser = new Schema({
   },
   address:{
     type:String,
-    enum:["Agartala" , "Outside Agartala"],
-    default:"Agartala"
+    enum:["AGARTALA" , "OUTSIDE AGARTALA"],
+    default:"AGARTALA"
     },
     Class:{
     type:String,
     required:true,
     default:"1"
   },
-  Board:{
+  board:{
     type:String,
     default:"TBSE"
   },
-  aim:{
+  promoter:{
+      type:String,
+      default:"false"
+    },
+    referalCode:{
     type:String,
-    required:true
+    default:"8837432226"
   },
-  referalCode:{
-    type:String,
-    default:""
-  },
-
-
 })
 
 const UserForm = model("Userform" , FormUser)
@@ -82,10 +80,8 @@ App.get("/" , (req,res)=>{
 
 App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
-    let {email , name , phone   , school , address  , Class , Board , referalCode , aim } = req.body
-    console.log(req.body)
+    let {email , name , phone   , school , address  , Class , board , referalCode , promoter } = req.body
   try {
-      
      const newUser = await UserForm.create({
       email , 
       name , 
@@ -93,9 +89,9 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
       school , 
       address , 
       Class , 
-      aim , 
-      Board ,
-      referalCode
+      board ,
+      referalCode,
+      promoter
       })
       await newUser.save()
       new ApiResponse(200 , "Success" , newUser).response(res)
