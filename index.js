@@ -98,7 +98,7 @@ App.get("/" , (req,res)=>{
 
 App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
-    let {email , name , phone   , school , address  , Class , board , referalCode , promoterm , streem } = req.body
+    let {email , name , phone   , school , address  , Class , board , referalCode , promoter , streem } = req.body
   try {
      const newUser = await UserForm.create({
       email , 
@@ -120,7 +120,6 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
         throw new ApiErrorResponse(400 , "Email already exist ")
       }
       throw new ApiErrorResponse(400 , "Phone already exist")
-
     }
     throw new ApiErrorResponse(400 , "Something went wrong")
 
