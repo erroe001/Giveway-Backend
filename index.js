@@ -32,7 +32,6 @@ App.listen(process.env.PORT , async()=>{
     console.log("Server Started")
   } catch (error) {
     console.log("Failed To Connect Mongoose ")
-    
   }
 })
 App.use(cors({
@@ -98,7 +97,11 @@ App.get("/" , (req,res)=>{
 
 App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
-    let {email , name , phone   , school , address  , Class , board , referalCode , promoter , streem } = req.body
+    let {email , name , phone, school , address  , Class , board , referalCode , promoter , streem } = req.body
+   const isReferalFound =  await UserForm.findOne({phone:referalCode})
+   if(!isReferalFound){
+    throw new ApiErrorResponse(404 , "Referal code invalid")
+   }
   try {
      const newUser = await UserForm.create({
       email , 
