@@ -4,6 +4,7 @@ import { ApiErrorResponse, ApiResponse, globleErrorHandler } from './Responses.j
 import { rateLimit } from 'express-rate-limit'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import crypto from 'crypto'
 dotenv.config({
   path:".env"
 })
@@ -70,6 +71,10 @@ const FormUser = new Schema({
     type:String,
     default:"TBSE"
   },
+  ownReferCode:{
+    type:String,
+    required:true
+  },
   promoter:{
       type:String,
       default:"NO"
@@ -94,12 +99,15 @@ App.get("/" , (req,res)=>{
 App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
     let {email , name , phone, school , address  , Class , board , referalCode , promoter , streem } = req.body
-  //  const isReferalFound =  await UserForm.findOne({phone:referalCode})
-  //  if(!isReferalFound){
-  //   throw new ApiErrorResponse(404 , "Referal code invalid")
-  //  }
+    if(referalCode){
+      const isReferalFound =  await UserForm.findOne({phone:referalCode})
+      if(!isReferalFound){
+       throw new ApiErrorResponse(404 , "Referal code invalid")
+      }
+    }
   try {
-     const newUser = await UserForm.create({
+    const ownReferCode = crypto.randomUUID()[0]
+    const newUser = await UserForm.create({
       email , 
       name , 
       phone, 
@@ -108,11 +116,16 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
       Class , 
       board ,
       referalCode,
+      ownReferCode,
       promoter,
       streem
       })
       await newUser.save()
-      new ApiResponse(200 , "Success" , newUser).response(res)
+      const userInfo = {
+        _id:newUser._id,
+        ownReferCode:newUser.ownReferCode
+      }
+      new ApiResponse(200 , "Registration successfully done" , userInfo).response(res)
   } catch (error) {
     if(error.code){
       if(error.keyValue.email){
