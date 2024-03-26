@@ -17,7 +17,7 @@ const limiter = rateLimit({
 })
 
 // Apply the rate limiting middleware to all requests.
-// App.use(limiter)
+App.use(limiter)
 
 App.use(express.json())
 App.use(express.static("Public"))
