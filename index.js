@@ -16,7 +16,7 @@ const limiter = rateLimit({
 })
 
 // Apply the rate limiting middleware to all requests.
-App.use(limiter)
+// App.use(limiter)
 
 App.use(express.json())
 App.use(express.static("Public"))
@@ -120,7 +120,7 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
       }
       throw new ApiErrorResponse(400 , "Phone already exist")
     }
-    throw new ApiErrorResponse(400 , "Something went wrong")
+    throw new ApiErrorResponse(400 , error)
 
   }
   } catch (error) {
