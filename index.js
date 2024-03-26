@@ -8,10 +8,6 @@ dotenv.config({
   path:".env"
 })
 const App = express()
-
-
-
-
 const limiter = rateLimit({
 	windowMs: 60 * 24 * 60 * 1000, // 24 hours
 	limit: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
@@ -35,7 +31,7 @@ App.listen(process.env.PORT , async()=>{
   }
 })
 App.use(cors({
-  origin:"https://www.myclassestripura.com"
+  origin:"https://www.myclassestripura.com/"
 }))
 
 
@@ -76,7 +72,7 @@ const FormUser = new Schema({
   },
   promoter:{
       type:String,
-      default:"no"
+      default:"NO"
     },
     referalCode:{
     type:String,
@@ -98,10 +94,10 @@ App.get("/" , (req,res)=>{
 App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
     let {email , name , phone, school , address  , Class , board , referalCode , promoter , streem } = req.body
-   const isReferalFound =  await UserForm.findOne({phone:referalCode})
-   if(!isReferalFound){
-    throw new ApiErrorResponse(404 , "Referal code invalid")
-   }
+  //  const isReferalFound =  await UserForm.findOne({phone:referalCode})
+  //  if(!isReferalFound){
+  //   throw new ApiErrorResponse(404 , "Referal code invalid")
+  //  }
   try {
      const newUser = await UserForm.create({
       email , 
