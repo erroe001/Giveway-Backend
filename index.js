@@ -1,12 +1,26 @@
 import express from 'express'
 import mongoose, { Schema, model } from 'mongoose'
 import { ApiErrorResponse, ApiResponse, globleErrorHandler } from './Responses.js'
+import { rateLimit } from 'express-rate-limit'
 import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config({
   path:".env"
 })
 const App = express()
+
+
+
+
+const limiter = rateLimit({
+	windowMs: 60 * 24 * 60 * 1000, // 24 hours
+	limit: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+})
+
+// Apply the rate limiting middleware to all requests.
+App.use(limiter)
 
 App.use(express.json())
 App.use(express.static("Public"))
@@ -22,7 +36,7 @@ App.listen(process.env.PORT , async()=>{
   }
 })
 App.use(cors({
-  origin:"*"
+  origin:"https://myclassestripura.com"
 }))
 
 
@@ -63,12 +77,16 @@ const FormUser = new Schema({
   },
   promoter:{
       type:String,
-      default:"false"
+      default:"no"
     },
     referalCode:{
     type:String,
     default:"8837432226"
   },
+  streem:{
+    type:String,
+    default:"ARTS"
+  }
 })
 
 const UserForm = model("Userform" , FormUser)
@@ -80,7 +98,7 @@ App.get("/" , (req,res)=>{
 
 App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
-    let {email , name , phone   , school , address  , Class , board , referalCode , promoter } = req.body
+    let {email , name , phone   , school , address  , Class , board , referalCode , promoterm , streem } = req.body
   try {
      const newUser = await UserForm.create({
       email , 
@@ -91,13 +109,18 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
       Class , 
       board ,
       referalCode,
-      promoter
+      promoter,
+      streem
       })
       await newUser.save()
       new ApiResponse(200 , "Success" , newUser).response(res)
   } catch (error) {
     if(error.code){
-      throw new ApiErrorResponse(400 , "User Already exist")
+      if(error.keyValue.email){
+        throw new ApiErrorResponse(400 , "Email already exist ")
+      }
+      throw new ApiErrorResponse(400 , "Phone already exist")
+
     }
     throw new ApiErrorResponse(400 , "Something went wrong")
 
