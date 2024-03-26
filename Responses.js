@@ -1,3 +1,5 @@
+
+
 export class ApiResponse {
    statusCode
    message
@@ -38,6 +40,7 @@ export class ApiErrorResponse  extends Error{
 
 
 export  function globleErrorHandler(err, req, res, next) {
+  console.log(err)
   if(err instanceof ApiErrorResponse){
       return res.status(err.statusCode).json({
           statusCode:err.statusCode,
@@ -45,6 +48,7 @@ export  function globleErrorHandler(err, req, res, next) {
           success:err.success
       });
   }
+ 
   return res.status(500).json({
       statusCode:500,
       message:"Something went wrong from our side ",

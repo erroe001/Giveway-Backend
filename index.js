@@ -11,9 +11,15 @@ dotenv.config({
 const App = express()
 const limiter = rateLimit({
 	windowMs: 60 * 24 * 60 * 1000, // 24 hours
-	limit: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	limit: 10, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
 	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  message:"Too many request comming from same ip address",
+  handler: (request, response, next, options) => {
+		if (request.rateLimit.used === request.rateLimit.limit + 1) {
+			throw new ApiErrorResponse(429  , "You reached your limit")
+		}
+	},
 })
 
 // Apply the rate limiting middleware to all requests.
