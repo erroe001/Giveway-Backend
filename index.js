@@ -38,7 +38,7 @@ App.listen(process.env.PORT , async()=>{
   }
 })
 App.use(cors({
-  origin:"https://www.myclassestripura.com"
+  origin:"http://localhost:3001/"
 }))
 
 
@@ -104,7 +104,7 @@ App.get("/" , (req,res)=>{
 
 App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
-    let {email , name , phone, school , address  , Class , board , referalCode , promoter , streem } = req.body
+    let {email, name , phone, school , address  , Class , board , referalCode , promoter , streem }= req.body
     if(referalCode){
       const isReferalFound =  await UserForm.findOne({phone:referalCode})
       if(!isReferalFound){
@@ -114,7 +114,7 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
   try {
     const ownReferCode = crypto.randomUUID()[0]
     const newUser = await UserForm.create({
-      email , 
+      email:email.toLowerCase() , 
       name , 
       phone, 
       school , 
@@ -152,7 +152,6 @@ App.get("/api/v1/getInfo" , async(req,res,next)=>{
   // get all the filtered details based on the details 
 
 })
-
 
 
 App.use(globleErrorHandler)
