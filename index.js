@@ -112,7 +112,7 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
       }
     }
   try {
-    const ownReferCode = crypto.randomUUID()[0]
+    
     const newUser = await UserForm.create({
       email:email.toLowerCase() , 
       name , 
@@ -122,14 +122,13 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
       Class , 
       board ,
       referalCode,
-      ownReferCode,
       promoter,
       streem
       })
       await newUser.save()
       const userInfo = {
         _id:newUser._id,
-        ownReferCode:newUser.ownReferCode
+        ownReferCode:newUser.phone
       }
       new ApiResponse(200 , "Registration successfully done" , userInfo).response(res)
   } catch (error) {
