@@ -77,10 +77,7 @@ const FormUser = new Schema({
     type:String,
     default:"TBSE"
   },
-  ownReferCode:{
-    type:String,
-    required:true
-  },
+ 
   promoter:{
       type:String,
       default:"NO"
