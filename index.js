@@ -38,7 +38,7 @@ App.listen(process.env.PORT , async()=>{
   }
 })
 App.use(cors({
-  origin:"https://www.myclassestripura.com"
+  origin:"*"
 }))
 
 
