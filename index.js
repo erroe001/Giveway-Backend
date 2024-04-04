@@ -109,7 +109,6 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
       }
     }
   try {
-    
     const newUser = await UserForm.create({
       email:email.toLowerCase() , 
       name , 
@@ -136,7 +135,6 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
       throw new ApiErrorResponse(400 , "Phone already exist")
     }
     throw new ApiErrorResponse(400 , error)
-
   }
   } catch (error) {
     next(error)
