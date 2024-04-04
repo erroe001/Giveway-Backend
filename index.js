@@ -143,7 +143,12 @@ App.post("/api/v1/SignupUser" , async(req,res , next)=>{
 
 
 App.get("/api/v1/getInfo" , async(req,res,next)=>{
-  // get all the filtered details based on the details 
+ try {
+   const users = await UserForm.find({})
+   new ApiResponse(200 , "okay" , users).response(res)
+ } catch (error) {
+  new ApiErrorResponse(200, error)
+ }
 
 })
 
